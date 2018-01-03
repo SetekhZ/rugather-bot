@@ -14,21 +14,21 @@ namespace RuGatherBot.Modules
     public class HelpModule : GatherModuleBase
     {
         private readonly IServiceProvider provider;
-        private readonly ConfigManager configManager;
+        private readonly ChannelConfigManager channelConfigManager;
         private readonly CommandService commandService;
 
         public HelpModule(
             CommandService commandService,
-            ConfigManager configManager, 
+            ChannelConfigManager channelConfigManager, 
             IServiceProvider provider)
         {
             this.provider = provider;
-            this.configManager = configManager;
+            this.channelConfigManager = channelConfigManager;
             this.commandService = commandService;
         }
 
         private async Task<string> GetPrefixAsync()
-            => (await configManager.GetPrefixAsync(Context.Guild.Id)) ?? $"@{Context.Client.CurrentUser.Username} ";
+            => (await channelConfigManager.GetPrefixAsync(Context.Channel.Id)) ?? $"@{Context.Client.CurrentUser.Username} ";
 
         [Command]
         public async Task HelpAsync()

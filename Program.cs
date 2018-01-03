@@ -37,8 +37,8 @@ namespace RuGatherBot
                     DefaultRunMode = RunMode.Async,
                     LogLevel = LogSeverity.Verbose
                 }))
-                .AddDbContext<ConfigDatabase>(ServiceLifetime.Transient)
-                .AddTransient<ConfigManager>()
+                .AddDbContext<ChannelConfigDatabase>(ServiceLifetime.Transient)
+                .AddTransient<ChannelConfigManager>()
                 .AddSingleton<CommandHandler>()
                 .AddSingleton<LoggingService>()
                 .AddSingleton<StartupService>()

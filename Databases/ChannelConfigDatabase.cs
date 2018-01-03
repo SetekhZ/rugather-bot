@@ -5,11 +5,11 @@ using RuGatherBot.Entities;
 
 namespace RuGatherBot.Databases
 {
-    public sealed class ConfigDatabase : DbContext
+    public sealed class ChannelConfigDatabase : DbContext
     {
-        public DbSet<GuildConfig> GuildConfigs { get; set; }
+        public DbSet<ChannelConfig> ChannelConfigs { get; set; }
 
-        public ConfigDatabase()
+        public ChannelConfigDatabase()
         {
             Database.EnsureCreated();
         }
@@ -20,20 +20,20 @@ namespace RuGatherBot.Databases
             if (!Directory.Exists(baseDir))
                 Directory.CreateDirectory(baseDir);
 
-            var datadir = Path.Combine(baseDir, "config.sqlite.db");
+            var datadir = Path.Combine(baseDir, "channelconfig.sqlite.db");
             optionsBuilder.UseSqlite($"Filename={datadir}");
         }
         
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<GuildConfig>()
+            builder.Entity<ChannelConfig>()
                 .HasKey(x => x.Id);
-            builder.Entity<GuildConfig>()
+            builder.Entity<ChannelConfig>()
                 .Property(x => x.Id)
                 .ValueGeneratedOnAdd()
                 .IsRequired();
-            builder.Entity<GuildConfig>()
-                .Property(x => x.GuildId)
+            builder.Entity<ChannelConfig>()
+                .Property(x => x.ChannelId)
                 .IsRequired();
         }
     }

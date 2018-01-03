@@ -13,20 +13,20 @@ namespace RuGatherBot.Services
         private readonly DiscordSocketClient discord;
         private readonly CommandService commands;
         private readonly LoggingService logger;
-        private readonly ConfigManager configManager;
+        private readonly ChannelConfigManager channelConfigManager;
         private readonly IServiceProvider serviceProvider;
 
         public CommandHandler(
             DiscordSocketClient discord,
             CommandService commands,
             LoggingService logger,
-            ConfigManager configManager,
+            ChannelConfigManager channelConfigManager,
             IServiceProvider serviceProvider)
         {
             this.discord = discord;
             this.commands = commands;
             this.logger = logger;
-            this.configManager = configManager;
+            this.channelConfigManager = channelConfigManager;
             this.serviceProvider = serviceProvider;
 
             this.discord.MessageReceived += OnMessageReceivedAsync;
@@ -36,9 +36,8 @@ namespace RuGatherBot.Services
         {
             if (!(s is SocketUserMessage msg))
                 return;
-
             var context = new GatherCommandContext(discord, msg);
-            var prefix = await configManager.GetPrefixAsync(context.Guild.Id);
+            var prefix = await channelConfigManager.GetPrefixAsync(context.Channel.Id);
 
             var argPos = 0;
             var hasStringPrefix = prefix != null && msg.HasStringPrefix(prefix, ref argPos);
