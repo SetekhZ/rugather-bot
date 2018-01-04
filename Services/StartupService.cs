@@ -29,8 +29,6 @@ namespace RuGatherBot.Services
             await discord.LoginAsync(TokenType.Bot, config["tokens:discord"]);
             await discord.StartAsync();
 
-            commandService.AddTypeReader<Uri>(new UriTypeReader());
-            
             await commandService.AddModulesAsync(Assembly.GetEntryAssembly());
         }
 

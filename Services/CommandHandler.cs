@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using Microsoft.Extensions.DependencyInjection;
 using RuGatherBot.Common;
 using RuGatherBot.Managers;
 
@@ -13,20 +14,17 @@ namespace RuGatherBot.Services
         private readonly DiscordSocketClient discord;
         private readonly CommandService commands;
         private readonly LoggingService logger;
-        private readonly ChannelConfigManager channelConfigManager;
         private readonly IServiceProvider serviceProvider;
 
         public CommandHandler(
             DiscordSocketClient discord,
             CommandService commands,
             LoggingService logger,
-            ChannelConfigManager channelConfigManager,
             IServiceProvider serviceProvider)
         {
             this.discord = discord;
             this.commands = commands;
             this.logger = logger;
-            this.channelConfigManager = channelConfigManager;
             this.serviceProvider = serviceProvider;
 
             this.discord.MessageReceived += OnMessageReceivedAsync;
@@ -37,13 +35,12 @@ namespace RuGatherBot.Services
             if (!(s is SocketUserMessage msg))
                 return;
             var context = new GatherCommandContext(discord, msg);
-            var prefix = await channelConfigManager.GetPrefixAsync(context.Channel.Id);
-
+            var prefix = await serviceProvider.GetRequiredService<GatherManager>().GetPrefixAsync(context.Channel.Id);
             var argPos = 0;
             var hasStringPrefix = prefix != null && msg.HasStringPrefix(prefix, ref argPos);
 
             if (hasStringPrefix || msg.HasMentionPrefix(discord.CurrentUser, ref argPos))
-                using (context.Channel.EnterTypingState())
+                //using (context.Channel.EnterTypingState())
                     await ExecuteAsync(context, serviceProvider, argPos);
         }
 
