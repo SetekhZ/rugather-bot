@@ -43,6 +43,17 @@ namespace RuGatherBot.Entities.Gather
         
         public List<GatherPlayer> Players { get; set; } = new List<GatherPlayer>();
 
+        public bool Join(GatherPlayer player)
+        {
+            if (Players.Count > TeamSize * 2 || Players.Any(x => x.Id == player.Id))
+            {
+                return false;
+            }
+            Players.Add(player);
+            CheckStatusChange();
+            return true;
+        }
+        
         public override string ToString()
         {
             var sb = new StringBuilder();
@@ -63,6 +74,11 @@ namespace RuGatherBot.Entities.Gather
         public string GetPlayersString()
         {
             return Players == null ? string.Empty : string.Join(", ", Players.Select(x => x.UserName));
+        }
+
+        private void CheckStatusChange()
+        {
+            
         }
     }
 }

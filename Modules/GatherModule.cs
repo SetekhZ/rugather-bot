@@ -35,12 +35,7 @@ namespace RuGatherBot.Modules
         public async Task JoinAsync()
         {
             var gather = await gatherManager.GetGatherInProgressOrCreateAsync(Context.Channel.Id);
-            if (gather.Players.Any(x => x.Id == Context.User.Id))
-            {
-                await ReplyAsync("You are already joined.");
-                return;
-            }
-            gather.Players.Add(new GatherPlayer(Context.User.Id, Context.User.Username));
+            gather.Join(new GatherPlayer(Context.User.Id, Context.User.Username));
             await gatherManager.UpdateAsync(gather);
             gather = await gatherManager.GetGatherInProgressAsync(Context.Channel.Id);
             await ReplyAsync($"Joined ({gather.GetPlayersCountsString()}): {gather.GetPlayersString()}" );
